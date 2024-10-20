@@ -15,23 +15,24 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       try {
         emit(ProductsLoadingState());
 
-        // Fetching data from the API
-        var response = await http.get(
-          Uri.parse('https://fakestoreapi.com/products'),
-        );
+        // Fetch products from API
+        var response = await http.get(Uri.parse("https://fakestoreapi.com/products"));
 
         if (response.statusCode == 200) {
-          // Parse the response body and convert to Product list
-          List<Product> products = (json.decode(response.body) as List)
-              .map((json) => Product.fromJson(json))
-              .toList();
-          ProductsLoadedState(productModel: products);
+          // Parse response body into a List of Products
+          List<dynamic> jsonResponse = json.decode(response.body);
+          List<Product> products = jsonResponse.map((productJson) {
+            return Product.fromJson(productJson);
+          }).toList();
 
+          emit(ProductsLoadedState(productModel: products));
         } else {
-          ProductsErrorState(errorMessage: "Fetching Error");
+          // If response is not OK, emit an error state
+          emit(ProductsErrorState(errorMessage: "Failed to load products. Status code: ${response.statusCode}"));
         }
       } catch (e) {
-        ProductsErrorState(errorMessage: e.toString());
+        // Catch and emit any other errors
+        emit(ProductsErrorState(errorMessage: "An error occurred: ${e.toString()}"));
       }
     });
   }
