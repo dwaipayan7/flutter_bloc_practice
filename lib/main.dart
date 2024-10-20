@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_practice/screens/home_screen.dart';
+import 'package:flutter_bloc_practice/screens/product_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Text("Dwaipayan"),
+      home: HomeScreen(),
     );
   }
 }
